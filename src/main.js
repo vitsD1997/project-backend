@@ -3,9 +3,9 @@ import express from "express";
 import cors from "cors";
 
 const app = express();
-app.use(cors()); // allowing everyone.
+app.use(cors());
 
-async function addrecord(req, res) {
+async function addTodo(req, res) {
   const uri = "mongodb://127.0.0.1:27017";
   const client = new MongoClient(uri);
 
@@ -13,16 +13,14 @@ async function addrecord(req, res) {
   const messageColl = db.collection("message");
 
   let inputDoc = {
-    message: req.query.message || "default",
+    message: req.query.task ,
+    description: req.query.description
   };
   await messageColl.insertOne(inputDoc);
 
   await client.close();
 
-  // string response
-  // res.send("record added")
 
-  // json response :: preferred
   res.json({ opr: "success" });
 }
 
@@ -39,9 +37,27 @@ async function findAllMessage(req, res) {
   res.json(list);
 }
 
-// http://localhost:4000/addrecord
-app.get("/addrecord", addrecord);
+
 app.get("/findAll", findAllMessage);
 
-// http://localhost:4000/
+app.get("/addTodo", addTodo);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 app.listen(4000);
